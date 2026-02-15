@@ -34,7 +34,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 
 
                     {/* Card Content */}
-                    <div className="flex flex-col items-center gap-4 md:gap-6 w-full max-w-[90%] h-full overflow-y-auto custom-scrollbar z-10 py-4">
+                    <div className="flex flex-col items-center gap-4 md:gap-6 w-full max-w-[90%] flex-1 min-h-0 touch-pan-y overflow-y-auto custom-scrollbar z-10 py-4">
                         <div className="flex flex-col items-center justify-center min-h-full w-full">
                             <span className="text-slate-400 font-bold uppercase tracking-widest text-xs md:text-sm flex-none">
                                 Pertanyaan
@@ -93,7 +93,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 
                 {/* Back Face */}
                 <div className="absolute inset-0 w-full h-full bg-primary/10 dark:bg-primary/5 rounded-2xl md:rounded-3xl border-4 border-primary rotate-y-180 backface-hidden flex flex-col items-center justify-center p-6 md:p-8 text-center overflow-hidden">
-                    <div className="w-full h-full overflow-y-auto custom-scrollbar px-2 py-4">
+                    <div className="w-full flex-1 min-h-0 touch-pan-y overflow-y-auto custom-scrollbar px-2 py-4">
                         <div className="flex flex-col items-center justify-center min-h-full w-full">
                             <span className="text-primary-dark font-bold uppercase tracking-widest text-xs md:text-sm mb-2 md:mb-4 flex-none">
                                 Jawaban
