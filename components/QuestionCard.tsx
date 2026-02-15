@@ -5,6 +5,7 @@ interface QuestionCardProps {
     answer: string;
     hint?: string;
     isFlipped: boolean;
+    isAlternateColor?: boolean;
     onClick: () => void;
 }
 
@@ -13,6 +14,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
     answer,
     hint,
     isFlipped,
+    isAlternateColor = false,
     onClick,
 }) => {
     const [showHint, setShowHint] = useState(false);
@@ -54,7 +56,10 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 
                 {/* Front Face */}
                 <div
-                    className="absolute inset-0 w-full h-full bg-white dark:bg-surface-dark rounded-2xl md:rounded-3xl border-4 md:border-[6px] border-slate-100 dark:border-slate-700 shadow-card flex flex-col items-center justify-center px-6 pt-6 pb-14 md:px-8 md:pt-8 md:pb-20 text-center backface-hidden z-20 overflow-hidden"
+                    className={`absolute inset-0 w-full h-full rounded-2xl md:rounded-3xl border-4 md:border-[6px] shadow-card flex flex-col items-center justify-center px-6 pt-6 pb-14 md:px-8 md:pt-8 md:pb-20 text-center backface-hidden z-20 overflow-hidden ${isAlternateColor
+                        ? 'bg-blue-50 dark:bg-slate-800 border-blue-200 dark:border-blue-900'
+                        : 'bg-white dark:bg-surface-dark border-slate-100 dark:border-slate-700'
+                        }`}
                     style={{ pointerEvents: isFlipped ? 'none' : 'auto' }}
                 >
 
@@ -125,7 +130,10 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
 
                 {/* Back Face */}
                 <div
-                    className="absolute inset-0 w-full h-full bg-primary/10 dark:bg-primary/5 rounded-2xl md:rounded-3xl border-4 border-primary rotate-y-180 backface-hidden flex flex-col items-center justify-center p-6 md:p-8 text-center overflow-hidden"
+                    className={`absolute inset-0 w-full h-full rounded-2xl md:rounded-3xl border-4 rotate-y-180 backface-hidden flex flex-col items-center justify-center p-6 md:p-8 text-center overflow-hidden ${isAlternateColor
+                        ? 'bg-blue-50 dark:bg-blue-900/10 border-blue-500'
+                        : 'bg-primary/10 dark:bg-primary/5 border-primary'
+                        }`}
                     style={{ pointerEvents: isFlipped ? 'auto' : 'none' }}
                 >
                     <div
@@ -134,7 +142,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
                         style={showAnswerFade ? { maskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)' } : undefined}
                     >
                         <div className="flex flex-col items-center justify-center min-h-full w-full">
-                            <span className="text-primary-dark font-bold uppercase tracking-widest text-xs md:text-sm mb-2 md:mb-4 flex-none">
+                            <span className={`${isAlternateColor ? 'text-blue-600 dark:text-blue-400' : 'text-primary-dark'} font-bold uppercase tracking-widest text-xs md:text-sm mb-2 md:mb-4 flex-none`}>
                                 Jawaban
                             </span>
                             <h2 className={`${answer.length > 500 ? 'text-base md:text-lg' :
@@ -142,7 +150,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
                                     answer.length > 150 ? 'text-xl md:text-2xl' :
                                         answer.length > 80 ? 'text-2xl md:text-3xl' :
                                             'text-3xl md:text-5xl'
-                                } font-bold text-primary-dark break-words max-w-full`}>
+                                } font-bold ${isAlternateColor ? 'text-blue-700 dark:text-blue-300' : 'text-primary-dark'} break-words max-w-full`}>
                                 {answer}
                             </h2>
                         </div>

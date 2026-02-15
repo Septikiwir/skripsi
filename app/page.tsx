@@ -9,6 +9,7 @@ export default function Home() {
   const [isFlipped, setIsFlipped] = useState(false);
   const [answeredCount, setAnsweredCount] = useState(0);
   const [finished, setFinished] = useState(false);
+  const [isAlternateColor, setIsAlternateColor] = useState(false);
 
   // Timer State
   const [elapsedTime, setElapsedTime] = useState(0);
@@ -44,6 +45,7 @@ export default function Home() {
     if (currentIndex < questions.length - 1) {
       setCurrentIndex(currentIndex + 1);
       setIsFlipped(false);
+      setIsAlternateColor((prev) => !prev);
     } else {
       setFinished(true);
     }
@@ -150,6 +152,7 @@ export default function Home() {
             answer={currentQuestion.answer}
             hint={currentQuestion.hint}
             isFlipped={isFlipped}
+            isAlternateColor={isAlternateColor}
             onClick={handleCardClick}
           />
         </div>
