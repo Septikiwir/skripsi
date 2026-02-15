@@ -16,11 +16,34 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
     onClick,
 }) => {
     const [showHint, setShowHint] = useState(false);
+    const [showQuestionFade, setShowQuestionFade] = useState(false);
+    const [showAnswerFade, setShowAnswerFade] = useState(false);
+
+    const questionRef = React.useRef<HTMLDivElement>(null);
+    const answerRef = React.useRef<HTMLDivElement>(null);
+
+    const checkOverflow = () => {
+        if (questionRef.current) {
+            const { scrollHeight, clientHeight } = questionRef.current;
+            setShowQuestionFade(scrollHeight > clientHeight);
+        }
+        if (answerRef.current) {
+            const { scrollHeight, clientHeight } = answerRef.current;
+            setShowAnswerFade(scrollHeight > clientHeight);
+        }
+    };
 
     // Reset hint state when question changes
     useEffect(() => {
         setShowHint(false);
     }, [question]);
+
+    // Check overflow on mount and when content changes
+    useEffect(() => {
+        checkOverflow();
+        window.addEventListener('resize', checkOverflow);
+        return () => window.removeEventListener('resize', checkOverflow);
+    }, [question, answer, hint, showHint]);
 
     return (
         <div
@@ -30,11 +53,18 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
             <div className={`relative w-full h-full transition-all duration-500 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
 
                 {/* Front Face */}
-                <div className="absolute inset-0 w-full h-full bg-white dark:bg-surface-dark rounded-2xl md:rounded-3xl border-4 md:border-[6px] border-slate-100 dark:border-slate-700 shadow-card flex flex-col items-center justify-center px-6 pt-6 pb-14 md:px-8 md:pt-8 md:pb-20 text-center backface-hidden z-20 overflow-hidden">
+                <div
+                    className="absolute inset-0 w-full h-full bg-white dark:bg-surface-dark rounded-2xl md:rounded-3xl border-4 md:border-[6px] border-slate-100 dark:border-slate-700 shadow-card flex flex-col items-center justify-center px-6 pt-6 pb-14 md:px-8 md:pt-8 md:pb-20 text-center backface-hidden z-20 overflow-hidden"
+                    style={{ pointerEvents: isFlipped ? 'none' : 'auto' }}
+                >
 
 
                     {/* Card Content */}
-                    <div className="flex flex-col items-center gap-4 md:gap-6 w-full max-w-[90%] flex-1 min-h-0 touch-pan-y overflow-y-auto custom-scrollbar z-10 py-4">
+                    <div
+                        ref={questionRef}
+                        className="flex flex-col items-center gap-4 md:gap-6 w-full max-w-[90%] flex-1 min-h-0 touch-pan-y overflow-y-auto custom-scrollbar z-10 py-4"
+                        style={showQuestionFade ? { maskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)' } : undefined}
+                    >
                         <div className="flex flex-col items-center justify-center min-h-full w-full">
                             <span className="text-slate-400 font-bold uppercase tracking-widest text-xs md:text-sm flex-none">
                                 Pertanyaan
@@ -55,6 +85,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
                                             className="text-slate-400 hover:text-primary dark:hover:text-primary font-semibold flex items-center gap-2 transition-colors px-3 py-1.5 md:px-4 md:py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 text-sm md:text-base cursor-pointer"
                                             onClick={(e) => {
                                                 e.stopPropagation();
+                                                checkOverflow(); // Check again when hint shows
                                                 setShowHint(true);
                                             }}
                                         >
@@ -66,6 +97,7 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
                                             className="animate-in fade-in slide-in-from-bottom-2 duration-300 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-200 p-3 rounded-lg text-sm max-w-xs border border-yellow-200 dark:border-yellow-800/50 cursor-pointer hover:bg-yellow-100 dark:hover:bg-yellow-900/30 transition-colors group/hint relative"
                                             onClick={(e) => {
                                                 e.stopPropagation();
+                                                checkOverflow(); // Check again when hint hides
                                                 setShowHint(false);
                                             }}
                                         >
@@ -92,8 +124,15 @@ const QuestionCard: React.FC<QuestionCardProps> = ({
                 </div>
 
                 {/* Back Face */}
-                <div className="absolute inset-0 w-full h-full bg-primary/10 dark:bg-primary/5 rounded-2xl md:rounded-3xl border-4 border-primary rotate-y-180 backface-hidden flex flex-col items-center justify-center p-6 md:p-8 text-center overflow-hidden">
-                    <div className="w-full flex-1 min-h-0 touch-pan-y overflow-y-auto custom-scrollbar px-2 py-4">
+                <div
+                    className="absolute inset-0 w-full h-full bg-primary/10 dark:bg-primary/5 rounded-2xl md:rounded-3xl border-4 border-primary rotate-y-180 backface-hidden flex flex-col items-center justify-center p-6 md:p-8 text-center overflow-hidden"
+                    style={{ pointerEvents: isFlipped ? 'auto' : 'none' }}
+                >
+                    <div
+                        ref={answerRef}
+                        className="w-full flex-1 min-h-0 touch-pan-y overflow-y-auto custom-scrollbar px-2 py-4"
+                        style={showAnswerFade ? { maskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, black 85%, transparent 100%)' } : undefined}
+                    >
                         <div className="flex flex-col items-center justify-center min-h-full w-full">
                             <span className="text-primary-dark font-bold uppercase tracking-widest text-xs md:text-sm mb-2 md:mb-4 flex-none">
                                 Jawaban
