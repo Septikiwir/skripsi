@@ -3,13 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3001",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
+    "autoprefixer": "^10.4.24",
     "next": "16.1.6",
+    "postcss": "^8.5.6",
     "react": "19.2.3",
     "react-dom": "19.2.3"
   },
